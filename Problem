@@ -250,6 +250,58 @@ array as
 
 
 
+2.
+
+
+
+
+
+
+Scenario:
+1. Use BeforeClass annotated Setup method named as beforeClass() to:
+The driver property can be set by using geckodriver as follows: System.setProperty(webdriver.gecko.driver,/home/pg_user/Desktop/geckodriver):
+Launch the application using the url: 
+Maximize the browser.
+Give an implicit wait of 5 seconds.
+
+2. test1() test method with priority as 1:
+Click on "REGISTER NOW" button.
+Parameterize all the fields in Registration Page using the values in the Details sheet of Data.xls. (Data.xls is found at /home/pg_user/Desktop/AdditionalSuppliedFiles)
+For every iteration:
+Click on Register button
+Fetch the success message/error message and write the message to the Status column of the excel.
+Take a screenshot of the page and save the image as "Name.png" at /home/pg_user/Desktop/AdditionalSuppliedFiles/Screenshots folder.
+(For example: for Library member with Name as MaryThomas save the image as MaryThomas.png)
+Click on Reset button.
+Click on "SIGN IN" in the home page.
+Sign in to the application with values "librarian" and "infy123"
+
+3. test2() test method with priority as 2:
+Create a data provider with the below given values and name it as "bookDetails":
+Book Name.                  ISBN Number
+Lord of the Rings.          000747766
+The Alchemist.              1112234988
+Click on "View Books" link
+Select "Fiction" from dropdown.
+Fetch the book name and ISBN number through data provider and then iterate through matching "book name" and "ISBN".
+If both book name and ISBN values are matching, then print the corresponding "'Author name" else print that the
+"Book is not available" in the console
+Refresh the page after all the iterations.
+
+4. test3() test method with priority as 3:
+Click on "Add a Book" link
+Add the books with below data
+Type of Book.    Non Fiction
+Book Title.      What Hlawrened
+ISBN Number.     122228-99
+Author Name      Hillary
+Fetch the text from the displayed alert box.
+Assert the fetched text with "Book successfully added", Ensure that the execution continues irrespective of
+assertion results.
+Accept the alert.
+
+5. Use AfterClass annotated tearDown method named as afterClass() to:
+Close all the tabs and browsers.
 
 
 
@@ -263,3 +315,59 @@ array as
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Following selectors are allowed in this scenario:
+. id
+• name
+• xpath (absolute and relative only, dynamic(axes) xpath is not allowed)
+• linkText (partialLinkText is not allowed)
+
+Scenario:
+1. Use Before Class annotated Setup method named as beforeClass()to:
+The driver property can be set by using geckodriver as follows: System.setProperty('webdriver.gecko.driver","/home/pg_user/Desktop/geckodriver");
+Launch the application using the url:
+Maximize the browser.
+Give an implicit wait of 10 seconds.
+
+2. test1() test method with priority as 1:
+Print the title of the page in console in the format: Title of current
+page is << title >>.
+Take the screenshot of the page and save it as a lmage.PNG in /home/pg_user/Desktop/AdditionalSuppliedFiles/Screenshots
+
+3. test2() test method with priority as 2:
+Use excel parameterization for the following:
+Browse Catalog and check for free Courses Online.
+Enroll for Intro to Programming in Python.
+
+Enroll for three Student with name, email, college as RTU and year of passing as 2013.
+Register for the Course.
+Print the Registration message in console.
+
+4. test3() test method
+Browse the Offers link
+Fetch the details of offer table and print the data in console
+Use Soft Assertion and assert the title of the page.
+
+5. Use After Class annotated tear Down method named as afterClass()
+to:
+Close all the tabs and Quit the browser windows opened after all tests execution.
