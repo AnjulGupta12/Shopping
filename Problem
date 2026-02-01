@@ -25,6 +25,18 @@ import org.testng.annotations.Test;
 public class Submit {
 
     WebDriver driver;
+
+
+
+
+//Use Before class annotated setup method named as before class to: 
+//The driver property can be set by using gecko driver as follows: 
+//system setproperty webdriver.gecko driver homelpg user/Desktop/geckodriver): 
+//launch the application using the url ......
+//Maximize the browser. Give an implicit wait of 8 seconds.
+
+
+
     
     @BeforeClass
     public void setup() {
@@ -34,6 +46,26 @@ public class Submit {
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         driver.manage().window().maximize();
     }
+
+
+
+
+
+
+test1() test method: 
+Click on "Add a Member" button. 
+populate the fields First Name, Last Name, Your Email Employee Number, Select stream by iterating the data given in Data.xIs excel file. Select the Gender 'Female' and click on "Add Member" button. 
+By using Excel write operation, print the displayed success message / error message in Data.xls excelfile 
+data.xls is found at /home/pg_user/Desktop/AdditionalSuppliedFiles 
+Click on Home Link.
+
+
+
+
+
+
+
+
 
     @Test
     public void add_mem() throws Exception {
@@ -85,6 +117,28 @@ public class Submit {
         hwd.close();
     }
 
+
+
+
+
+
+test2() test method
+Click on "Alreadv a Member?" button.
+Create a testng.xml by converting the TestNG class and insert the following 2 parameters tag 
+<parameter name="type" value-"ivs_bob" > </parameter> 
+<parameter name="pswd" value="illumination" > </parameter>
+Login by populating the fields with credentials given in testng.xml
+Check for successful login by asserting the presence of SignOut link on dashboard page
+
+
+
+
+
+
+
+
+
+
     @Parameters({"type", "pswd"})
     @Test
     public void already_mem(String typ, String pwd) {
@@ -106,6 +160,26 @@ public class Submit {
             }
         }
     }
+
+
+
+
+
+
+test3() test method:
+Create a data provider with any array name, to store data as mentioned in the below tables:
+Course.                 Role
+Selenium Using Python.  Educator
+Agile Testing.          Co-Educator
+To add a course, populate the "Select Course" and "Select Role" by using the data provider mentioned above and Click on "Add Details" button
+array as
+
+
+
+
+
+
+
 
     @Test(dataProvider="data")
     public void add_course(String co, String rol) {
@@ -132,6 +206,26 @@ public class Submit {
         return a;
     }
 
+
+
+
+
+
+
+
+
+
+Use @AfterClass annotated tear Down method named as afterClass( to:
+Click on SignOut link.
+Close all the tabs and quit browser.
+
+
+
+
+
+
+
+
     @AfterClass
     public void teardown()
     {
@@ -151,3 +245,21 @@ public class Submit {
       <class name="solution.Submit"/>
     </classes>
   </test> </suite> ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
