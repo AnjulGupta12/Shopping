@@ -52,11 +52,11 @@ public class Submit {
 
 
 
-test1() test method: 
-Click on "Add a Member" button. 
-populate the fields First Name, Last Name, Your Email Employee Number, Select stream by iterating the data given in Data.xIs excel file. Select the Gender 'Female' and click on "Add Member" button. 
-By using Excel write operation, print the displayed success message / error message in Data.xls excelfile 
-data.xls is found at /home/pg_user/Desktop/AdditionalSuppliedFiles 
+//test1() test method: 
+//Click on "Add a Member" button. 
+//populate the fields First Name, Last Name, Your Email Employee Number, Select stream by iterating the data given in Data.xIs excel file. Select the Gender 'Female' and click on "Add Member" button. 
+//By using Excel write operation, print the displayed success message / error message in Data.xls excelfile 
+//data.xls is found at /home/pg_user/Desktop/AdditionalSuppliedFiles 
 Click on Home Link.
 
 
@@ -122,13 +122,13 @@ Click on Home Link.
 
 
 
-test2() test method
-Click on "Alreadv a Member?" button.
-Create a testng.xml by converting the TestNG class and insert the following 2 parameters tag 
-<parameter name="type" value-"ivs_bob" > </parameter> 
-<parameter name="pswd" value="illumination" > </parameter>
-Login by populating the fields with credentials given in testng.xml
-Check for successful login by asserting the presence of SignOut link on dashboard page
+//test2() test method
+//Click on "Alreadv a Member?" button.
+//Create a testng.xml by converting the TestNG class and insert the following 2 parameters tag 
+//<parameter name="type" value-"ivs_bob" > </parameter> 
+//<parameter name="pswd" value="illumination" > </parameter>
+//Login by populating the fields with credentials given in testng.xml
+//Check for successful login by asserting the presence of SignOut link on dashboard page
 
 
 
@@ -166,12 +166,12 @@ Check for successful login by asserting the presence of SignOut link on dashboar
 
 
 
-test3() test method:
-Create a data provider with any array name, to store data as mentioned in the below tables:
-Course.                 Role
-Selenium Using Python.  Educator
-Agile Testing.          Co-Educator
-To add a course, populate the "Select Course" and "Select Role" by using the data provider mentioned above and Click on "Add Details" button
+//test3() test method:
+//Create a data provider with any array name, to store data as mentioned in the below tables:
+//Course.                 Role
+//Selenium Using Python.  Educator
+//Agile Testing.          Co-Educator
+//To add a course, populate the "Select Course" and "Select Role" by using the data provider mentioned above and Click on "Add Details" button
 array as
 
 
@@ -215,9 +215,9 @@ array as
 
 
 
-Use @AfterClass annotated tear Down method named as afterClass( to:
-Click on SignOut link.
-Close all the tabs and quit browser.
+//Use @AfterClass annotated tear Down method named as afterClass( to:
+//Click on SignOut link.
+//Close all the tabs and quit browser.
 
 
 
