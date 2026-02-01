@@ -1,0 +1,153 @@
+
+package solution;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+public class Submit {
+
+    WebDriver driver;
+    
+    @BeforeClass
+    public void setup() {
+        System.setProperty("webdriver.gecko.driver", "/home/user/Desktop/geckodriver");
+        driver = new FirefoxDriver();
+        driver.get("http:/");
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        driver.manage().window().maximize();
+    }
+
+    @Test
+    public void add_mem() throws Exception {
+        driver.findElement(By.linkText("Add a Member")).click();
+        FileInputStream fin = new FileInputStream("/home/user/Desktop/user_repo/To_Participant/AdditionalSuppli...");
+        HSSFWorkbook hwd = new HSSFWorkbook(fin);
+        HSSFSheet sheet = hwd.getSheet("Sheet1");
+
+        //for(int i=sheet.getFirstRowNum()+1;i<=sheet.getLastRowNum();i++)
+        //{
+        HSSFRow row = sheet.getRow(0);
+
+        HSSFCell cell1 = row.getCell(0);
+        String first = cell1.getStringCellValue();
+
+        HSSFCell cell2 = row.getCell(1);
+        String last = cell2.getStringCellValue();
+
+        HSSFCell cell3 = row.getCell(2);
+        String email = cell3.getStringCellValue();
+
+        HSSFCell cell4 = row.getCell(3);
+        String empid = cell4.getStringCellValue();
+
+        HSSFCell cell5 = row.getCell(4);
+        String stream = cell5.getStringCellValue();
+
+        driver.findElement(By.xpath("/html/body/div[1]/form/input[1]")).sendKeys(first);
+        driver.findElement(By.xpath("/html/body/div[1]/form/input[2]")).sendKeys(last);
+        driver.findElement(By.xpath("//*[@id='email_form']")).sendKeys(email);
+        driver.findElement(By.xpath("//*[@id='password_form']")).sendKeys(empid);
+        
+        WebElement str = driver.findElement(By.xpath("/html/body/div[1]/form/select"));
+        Select s = new Select(str);
+        s.selectByVisibleText(stream);
+
+        driver.findElement(By.xpath("//*[@id='radio_button']")).click();
+        driver.findElement(By.xpath("/html/body/div[1]/form/button")).click();
+
+        String text = driver.findElement(By.xpath("//*[@id='successBox']")).getText();
+        HSSFCell cell6 = row.createCell(5);
+        cell6.setCellValue(text);
+
+        driver.findElement(By.xpath("/html/body/div[1]/nav/a")).click();
+        //}
+
+        FileOutputStream fout = new FileOutputStream("/home/user/Desktop/user_repo/To_Participant/AdditionalSupp...");
+        hwd.write(fout);
+        hwd.close();
+    }
+
+    @Parameters({"type", "pswd"})
+    @Test
+    public void already_mem(String typ, String pwd) {
+        driver.findElement(By.xpath("/html/body/div/div/div/div[2]/p[2]/a[2]")).click();
+        driver.findElement(By.xpath("//*[@id='inputName']")).sendKeys(typ);
+        driver.findElement(By.xpath("//*[@id='inputPassword']")).sendKeys(pwd);
+        driver.findElement(By.xpath("/html/body/div/form/button")).click();
+
+        String val;
+        List<WebElement> link = driver.findElements(By.tagName("a"));
+        for(WebElement link1 : link)
+        {
+            String msg = link1.getText();
+            if(msg.equals("SignOut"))
+            {
+                val = msg;
+                Assert.assertEquals(val, "SignOut");
+                break;
+            }
+        }
+    }
+
+    @Test(dataProvider="data")
+    public void add_course(String co, String rol) {
+        WebElement course = driver.findElement(By.xpath("//*[@id='course']"));
+        Select sel = new Select(course);
+        sel.selectByVisibleText(co);
+
+        WebElement role = driver.findElement(By.xpath("//*[@id='role']"));
+        Select sel1 = new Select(role);
+        sel1.selectByVisibleText(rol);
+
+        driver.findElement(By.xpath("/html/body/div[3]/form/button[1]")).click();
+    }
+
+    @DataProvider
+    public Object[][] data()
+    {
+        Object[][] a = new Object[2][2];
+        a[0][0] = "Selenium Using Python";
+        a[0][1] = "Educator";
+
+        a[1][0] = "Agile Testing";
+        a[1][1] = "Co-Educator";
+        return a;
+    }
+
+    @AfterClass
+    public void teardown()
+    {
+        driver.findElement(By.xpath("/html/body/nav/div/div[2]/ul/li/a")).click();
+        driver.close();
+        driver.quit();
+    }
+}
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Suite">
+  <parameter name="type" value="ivs_bob" > </parameter>
+  <parameter name="pswd" value="illumination" > </parameter>
+  <test name="Test">
+    <classes>
+      <class name="solution.Submit"/>
+    </classes>
+  </test> </suite> ```
