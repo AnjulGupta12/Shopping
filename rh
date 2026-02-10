@@ -1,0 +1,302 @@
+import org.openqa.selenium.*;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+public class TestAutomation {
+    
+    private WebDriver driver;
+    private String mainWindowHandle;
+    private static final String EXCEL_PATH ";
+    
+    @BeforeClass
+    public void beforeClass() {
+        // 1. Setup method
+        System.setProperty("webdriver.gecko.driver", ckodriver");
+        
+        driver = new FirefoxDriver();
+        
+        // Launch the application
+        ml");
+        
+        // Maximize the browser
+        driver.manage().window().maximize();
+        
+        // Implicit wait of 12 seconds
+        driver.manage().timeouts().implicitlyWait(12, TimeUnit.SECONDS);
+        
+        mainWindowHandle = driver.getWindowHandle();
+    }
+    
+    @Test
+    public void test10() {
+        System.out.println("=== Starting test10 ===");
+        
+        // Click on the Offers link
+        WebElement offersLink = driver.findElement(By.linkText("Offers"));
+        offersLink.click();
+        
+        // Fetch all the options present in the dropdown and print them
+        WebElement categoryDropdown = driver.findElement(By.id("category"));
+        Select select = new Select(categoryDropdown);
+        
+        List<WebElement> options = select.getOptions();
+        System.out.println("Available options in dropdown:");
+        for (WebElement option : options) {
+            System.out.println(option.getText());
+        }
+        
+        // Select the category Credit Card Offers
+        select.selectByVisibleText("Credit Card Offers");
+        
+        // Click on the View Offer button corresponding to bank name: ICICI
+        // Using relative xpath to find button near ICICI text
+        WebElement iciciViewButton = driver.findElement(By.xpath("//td[contains(text(), 'ICICI')]/following-sibling::td/button[contains(text(), 'View Offer')]"));
+        iciciViewButton.click();
+        
+        // Assert alert message
+        Alert alert = driver.switchTo().alert();
+        String alertText = alert.getText();
+        System.out.println("Alert text: " + alertText);
+        
+        Assert.assertEquals(alertText, "Now get Rs 100 off on your ICICI Bank Credit Card", 
+                          "Alert message doesn't match!");
+        
+        // Accept the alert
+        alert.accept();
+        
+        System.out.println("=== test10 completed successfully ===");
+    }
+    
+    @Test
+    public void test20() {
+        System.out.println("\n=== Starting test20 ===");
+        
+        // Click on the Home link
+        WebElement homeLink = driver.findElement(By.linkText("Home"));
+        homeLink.click();
+        
+        // Select the Garuda Mall radio button
+        WebElement garudaMallRadio = driver.findElement(By.id("garuda"));
+        garudaMallRadio.click();
+        
+        // Iterate over the Movies Now web table
+        WebElement moviesTable = driver.findElement(By.id("movies"));
+        List<WebElement> rows = moviesTable.findElements(By.tagName("tr"));
+        
+        System.out.println("Top Movies and Ratings:");
+        // Skip header row (starting from index 1)
+        for (int i = 1; i < rows.size(); i++) {
+            WebElement row = rows.get(i);
+            List<WebElement> cells = row.findElements(By.tagName("td"));
+            
+            if (cells.size() >= 2) {
+                String movieName = cells.get(0).getText();
+                String rating = cells.get(1).getText();
+                System.out.println("Movie: " + movieName + " | Rating: " + rating);
+            }
+        }
+        
+        // Select the BM Habitat Mall radio button
+        WebElement bmHabitatRadio = driver.findElement(By.id("bm"));
+        bmHabitatRadio.click();
+        
+        // Take screenshot
+        try {
+            File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+            String screenshotPath = "/home/pg_user/Desktop/AdditionalSuppliedFiles/Screenshots/Image.png";
+            
+            // Create directory if it doesn't exist
+            File directory = new File("/home/pg_user/Desktop/AdditionalSuppliedFiles/Screenshots");
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+            
+            // Copy screenshot to destination
+            File destFile = new File(screenshotPath);
+            org.apache.commons.io.FileUtils.copyFile(screenshot, destFile);
+            System.out.println("Screenshot saved to: " + screenshotPath);
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        System.out.println("=== test20 completed successfully ===");
+    }
+    
+    @Test
+    public void test30() {
+        System.out.println("\n=== Starting test30 ===");
+        
+        // Click on Events Link
+        WebElement eventsLink = driver.findElement(By.linkText("Events"));
+        eventsLink.click();
+        
+        // Click on Music check box
+        WebElement musicCheckbox = driver.findElement(By.id("music"));
+        musicCheckbox.click();
+        
+        // Click on the radio button adjacent to Sunburn On Air
+        WebElement sunburnRadio = driver.findElement(By.xpath("//td[contains(text(), 'Sunburn On Air')]/preceding-sibling::td/input[@type='radio']"));
+        sunburnRadio.click();
+        
+        // Accept the alert
+        Alert alert = driver.switchTo().alert();
+        alert.accept();
+        
+        // Print URLs of each window
+        Set<String> windowHandles = driver.getWindowHandles();
+        System.out.println("Window URLs:");
+        for (String handle : windowHandles) {
+            driver.switchTo().window(handle);
+            System.out.println("Window Handle: " + handle + " | URL: " + driver.getCurrentUrl());
+        }
+        
+        // Find and switch to Booking window
+        String bookingWindowHandle = "";
+        boolean bookingWindowFound = false;
+        
+        for (String handle : windowHandles) {
+            driver.switchTo().window(handle);
+            if (driver.getTitle().equals("BookThyEvent: Booking")) {
+                bookingWindowHandle = handle;
+                bookingWindowFound = true;
+                System.out.println("Desired window found");
+                break;
+            }
+        }
+        
+        if (!bookingWindowFound) {
+            System.out.println("Desired window not found");
+            return;
+        }
+        
+        // Parameterize using Excel
+        try {
+            FileInputStream file = new FileInputStream(new File(EXCEL_PATH));
+            Workbook workbook = new XSSFWorkbook(file);
+            Sheet sheet = workbook.getSheet("Details");
+            
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) { // Start from row 1 (skip header)
+                Row row = sheet.getRow(i);
+                
+                if (row == null) continue;
+                
+                // Read data from Excel
+                String name = getCellValue(row.getCell(0));
+                String email = getCellValue(row.getCell(1));
+                String phone = getCellValue(row.getCell(2));
+                String tickets = getCellValue(row.getCell(3));
+                
+                System.out.println("Processing: " + name + ", " + email + ", " + phone + ", " + tickets);
+                
+                // Fill form fields
+                WebElement nameField = driver.findElement(By.id("name"));
+                nameField.clear();
+                nameField.sendKeys(name);
+                
+                WebElement emailField = driver.findElement(By.id("email"));
+                emailField.clear();
+                emailField.sendKeys(email);
+                
+                WebElement phoneField = driver.findElement(By.id("phone"));
+                phoneField.clear();
+                phoneField.sendKeys(phone);
+                
+                WebElement ticketsField = driver.findElement(By.id("tickets"));
+                ticketsField.clear();
+                ticketsField.sendKeys(tickets);
+                
+                // Click Check Valid Data button
+                WebElement checkValidButton = driver.findElement(By.id("checkValid"));
+                checkValidButton.click();
+                
+                // Click Calculate Cost button
+                WebElement calculateButton = driver.findElement(By.id("calculate"));
+                calculateButton.click();
+                
+                // Accept alert
+                try {
+                    Thread.sleep(1000); // Wait for alert to appear
+                    Alert costAlert = driver.switchTo().alert();
+                    costAlert.accept();
+                } catch (Exception e) {
+                    System.out.println("No alert for this iteration");
+                }
+                
+                // Clear fields for next iteration
+                nameField.clear();
+                emailField.clear();
+                phoneField.clear();
+                ticketsField.clear();
+            }
+            
+            workbook.close();
+            file.close();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        System.out.println("=== test30 completed successfully ===");
+    }
+    
+    @AfterClass
+    public void afterClass() {
+        // Navigate back to Home page
+        try {
+            driver.switchTo().window(mainWindowHandle);
+            WebElement homeLink = driver.findElement(By.linkText("Home"));
+            homeLink.click();
+        } catch (Exception e) {
+            System.out.println("Could not navigate to Home page: " + e.getMessage());
+        }
+        
+        // Close all browser instances
+        if (driver != null) {
+            driver.quit();
+        }
+        
+        System.out.println("\n=== All tests completed and browser closed ===");
+    }
+    
+    // Helper method to get cell value from Excel
+    private String getCellValue(Cell cell) {
+        if (cell == null) {
+            return "";
+        }
+        
+        switch (cell.getCellType()) {
+            case STRING:
+                return cell.getStringCellValue();
+            case NUMERIC:
+                if (DateUtil.isCellDateFormatted(cell)) {
+                    return cell.getDateCellValue().toString();
+                } else {
+                    // Remove decimal if it's .0
+                    double num = cell.getNumericCellValue();
+                    if (num == Math.floor(num)) {
+                        return String.valueOf((int) num);
+                    } else {
+                        return String.valueOf(num);
+                    }
+                }
+            case BOOLEAN:
+                return String.valueOf(cell.getBooleanCellValue());
+            case FORMULA:
+                return cell.getCellFormula();
+            default:
+                return "";
+        }
+    }
+}
