@@ -1,3 +1,96 @@
+// SCREENSHOT
+TakesScreenshot ts = ((TakesScreenshot) driver);
+File srcfileLogin = ts.getScreenshotAs(OutputType.FILE);
+File targetLogin = new File("C:\\Users\\Screenshots\\Login.png");
+FileUtils.copyFile(srcfileLogin, targetLogin);
+
+
+// WAIT
+WebDriverWait wait = new WebDriverWait(driver, 30);
+wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("lblMessage3")));
+
+
+// EXCEL
+FileInputStream fis = new FileInputStream(path);
+XSSFWorkbook book = new XSSFWorkbook(fis);
+XSSFSheet sheet = book.getSheet("Sheet1");
+
+int rowcount = sheet.getLastRowNum() - sheet.getFirstRowNum() - 1;
+System.out.println(sheet.getLastRowNum());
+System.out.println(sheet.getFirstRowNum());
+System.out.println(rowcount);
+
+for (int i = 1; i < rowcount; i++) {
+
+    String PN = sheet.getRow(i).getCell(2).getStringCellValue();
+    String NN = sheet.getRow(i).getCell(3).getStringCellValue();
+
+    driver.findElement(By.id("bodyPayeeAccountNumber"))
+          .sendKeys(String.valueOf(PAN));
+    driver.findElement(By.id("bodyReEnterAccountNumber"))
+          .sendKeys(String.valueOf(RPAN));
+    driver.findElement(By.id("body_cph_MyAccount_txtPayeeName"))
+          .sendKeys(PN);
+    driver.findElement(By.id("body_cph_MyAccount_txtPayeeNickName"))
+          .sendKeys(NN);
+
+    Row newrow = sheet.getRow(i);
+    Cell newcell = newrow.createCell(4);
+    newcell.setCellValue("Payee Added");
+
+    FileOutputStream fso = new FileOutputStream(path);
+    book.write(fso);
+    book.close();
+}
+
+
+// LINKTEXT
+driver.findElement(By.linkText("Loans")).click();
+
+
+// SELECT
+WebElement loantype = driver.findElement(By.id("body_cph_Loans_ddlLoanType"));
+Select loantypeobj = new Select(loantype);
+loantypeobj.selectByValue("2");
+
+
+// ALERT
+driver.findElement(By.xpath("/html/body/div[2]/div[1]/div[1]/input")).click();
+driver.switchTo().alert().accept();
+
+
+// FRAME
+driver.switchTo().frame("left");
+driver.switchTo().parentFrame();
+driver.switchTo().frame("center");
+
+
+// WINDOW HANDLING
+Set<String> win = driver.getWindowHandles();
+System.out.println(win.size());
+
+for (String w : win) {
+    driver.switchTo().window(w);
+    String curl = driver.getCurrentUrl();
+
+    if (curl.equals("http://10.77.67.16:83/Common/ContactUs.aspx")) {
+        System.out.println(
+            driver.findElement(By.id("GeneralTabMenu_header_divHeader")).getText()
+        );
+    }
+}
+
+
+// AFTERMETHOD
+public void tearDown() {
+    driver.close();
+}
+
+
+
+
+
+_...... ... .... .... .... .... ... ... .... ...... ...... ......_...... ... .... .... .... .... ... ... .... ...... ...... ......
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
@@ -21,25 +114,21 @@ public class TestAutomation {
     
     @BeforeClass
     public void beforeClass() {
-        // 1. Setup method
+       
         System.setProperty("webdriver.gecko.driver", ckodriver");
-        
         driver = new FirefoxDriver();
-        
-        // Launch the application
-        ml");
-        
-        // Maximize the browser
+        driver.get("http://pplication/");
         driver.manage().window().maximize();
-        
-        // Implicit wait of 12 seconds
         driver.manage().timeouts().implicitlyWait(12, TimeUnit.SECONDS);
-        
         mainWindowHandle = driver.getWindowHandle();
     }
     
     @Test
-    public void test10() {
+    public void test1() {
+linkText , dropdown ' sibling xpath , alert
+
+
+
         System.out.println("=== Starting test10 ===");
         
         // Click on the Offers link
@@ -69,8 +158,7 @@ public class TestAutomation {
         String alertText = alert.getText();
         System.out.println("Alert text: " + alertText);
         
-        Assert.assertEquals(alertText, "Now get Rs 100 off on your ICICI Bank Credit Card", 
-                          "Alert message doesn't match!");
+        Assert.assertEquals(alertText, "Now get Rs 100 off on your ICICI Bank Credit Card", "Alert message doesn't match!");
         
         // Accept the alert
         alert.accept();
@@ -80,6 +168,9 @@ public class TestAutomation {
     
     @Test
     public void test20() {
+List< WebElement> , tagName, Fetch table, screenshot
+
+
         System.out.println("\n=== Starting test20 ===");
         
         // Click on the Home link
@@ -114,10 +205,10 @@ public class TestAutomation {
         // Take screenshot
         try {
             File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-            String screenshotPath = "/home/pg_user/Desktop/AdditionalSuppliedFiles/Screenshots/Image.png";
+            String screenshotPath = "/home//Desktop/AdditionalSuppliedFiles/Screenshots/Image.png";
             
             // Create directory if it doesn't exist
-            File directory = new File("/home/pg_user/Desktop/AdditionalSuppliedFiles/Screenshots");
+            File directory = new File("/home//Desktop/AdditionalSuppliedFiles/Screenshots");
             if (!directory.exists()) {
                 directory.mkdirs();
             }
@@ -134,8 +225,13 @@ public class TestAutomation {
         System.out.println("=== test20 completed successfully ===");
     }
     
+
+
     @Test
     public void test30() {
+WindowtHandle , Parametersize using Excel
+
+
         System.out.println("\n=== Starting test30 ===");
         
         // Click on Events Link
@@ -284,6 +380,992 @@ public class TestAutomation {
                     return cell.getDateCellValue().toString();
                 } else {
                     // Remove decimal if it's .0
+                    double num = cell.getNumericCellValue();
+                    if (num == Math.floor(num)) {
+                        return String.valueOf((int) num);
+                    } else {
+                        return String.valueOf(num);
+                    }
+                }
+            case BOOLEAN:
+                return String.valueOf(cell.getBooleanCellValue());
+            case FORMULA:
+                return cell.getCellFormula();
+            default:
+                return "";
+        }
+    }
+}
+
+
+_...... ... .... .... .... .... ... ... .... ...... ...... ......_...... ... .... .... .... .... ... ... .... ...... ...... ......
+
+
+import org.openqa.selenium.*;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
+import org.testng.annotations.*;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import java.io.*;
+import java.util.concurrent.TimeUnit;
+
+public class MemberManagementTest {
+    
+    private WebDriver driver;
+    private String mainWindowHandle;
+    private static final String EXCEL_PATH = "/home//Desktop/AdditionalSuppliedFiles/Data.xls";
+    
+    @BeforeClass
+    public void beforeClass() {
+        // 1. Setup method
+        System.setProperty("webdriver.gecko.driver", "/home//Desktop/geckodriver");
+        
+        driver = new FirefoxDriver();
+        
+        // Launch the application
+        driver.get("http://localhost:8080/application/");
+        
+        // Maximize the browser
+        driver.manage().window().maximize();
+        
+        // Implicit wait of 8 seconds
+        driver.manage().timeouts().implicitlyWait(8, TimeUnit.SECONDS);
+        
+        mainWindowHandle = driver.getWindowHandle();
+    }
+    
+    @Test
+    public void test10() throws Exception {
+        System.out.println("=== Starting test10 ===");
+        
+        // Click on "Add a Member" button
+        WebElement addMemberButton = driver.findElement(By.linkText("Add a Member"));
+        addMemberButton.click();
+        
+        // Process Excel data
+        FileInputStream file = null;
+        Workbook workbook = null;
+        FileOutputStream outFile = null;
+        
+        try {
+            // Open Excel file
+            file = new FileInputStream(new File(EXCEL_PATH));
+            workbook = new XSSFWorkbook(file);
+            Sheet sheet = workbook.getSheetAt(0); // Assuming first sheet
+            
+            // Find column indices
+            int firstNameCol = -1, lastNameCol = -1, emailCol = -1, empNoCol = -1, streamCol = -1, resultCol = -1;
+            Row headerRow = sheet.getRow(0);
+            
+            for (Cell cell : headerRow) {
+                String header = cell.getStringCellValue();
+                switch (header) {
+                    case "First Name": firstNameCol = cell.getColumnIndex(); break;
+                    case "Last Name": lastNameCol = cell.getColumnIndex(); break;
+                    case "Your Email": emailCol = cell.getColumnIndex(); break;
+                    case "Employee Number": empNoCol = cell.getColumnIndex(); break;
+                    case "Select Stream": streamCol = cell.getColumnIndex(); break;
+                    case "Result": resultCol = cell.getColumnIndex(); break;
+                }
+            }
+            
+            // Create Result column if not exists
+            if (resultCol == -1) {
+                resultCol = headerRow.getLastCellNum();
+                Cell resultHeader = headerRow.createCell(resultCol);
+                resultHeader.setCellValue("Result");
+            }
+            
+            // Iterate through Excel rows (skip header row)
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
+                if (row == null) continue;
+                
+                // Get data from Excel
+                String firstName = getCellValue(row.getCell(firstNameCol));
+                String lastName = getCellValue(row.getCell(lastNameCol));
+                String email = getCellValue(row.getCell(emailCol));
+                String empNo = getCellValue(row.getCell(empNoCol));
+                String stream = getCellValue(row.getCell(streamCol));
+                
+                System.out.println("Processing: " + firstName + " " + lastName);
+                
+                // Fill form fields
+                WebElement firstNameField = driver.findElement(By.id("firstName"));
+                firstNameField.clear();
+                firstNameField.sendKeys(firstName);
+                
+                WebElement lastNameField = driver.findElement(By.id("lastName"));
+                lastNameField.clear();
+                lastNameField.sendKeys(lastName);
+                
+                WebElement emailField = driver.findElement(By.id("email"));
+                emailField.clear();
+                emailField.sendKeys(email);
+                
+                WebElement empNoField = driver.findElement(By.id("employeeNumber"));
+                empNoField.clear();
+                empNoField.sendKeys(empNo);
+                
+                // Select stream from dropdown
+                WebElement streamDropdown = driver.findElement(By.id("stream"));
+                Select streamSelect = new Select(streamDropdown);
+                streamSelect.selectByVisibleText(stream);
+                
+                // Select Gender as 'Female'
+                WebElement femaleRadio = driver.findElement(By.id("female"));
+                femaleRadio.click();
+                
+                // Click on "Add Member" button
+                WebElement submitButton = driver.findElement(By.id("addMember"));
+                submitButton.click();
+                
+                // Get success/error message
+                String message = "";
+                try {
+                    // Try to find success message
+                    WebElement successMsg = driver.findElement(By.xpath("//div[contains(@class, 'success')]"));
+                    message = successMsg.getText();
+                } catch (Exception e1) {
+                    try {
+                        // Try to find error message
+                        WebElement errorMsg = driver.findElement(By.xpath("//div[contains(@class, 'error')]"));
+                        message = errorMsg.getText();
+                    } catch (Exception e2) {
+                        message = "No message found";
+                    }
+                }
+                
+                // Write message to Excel
+                Cell resultCell = row.getCell(resultCol);
+                if (resultCell == null) {
+                    resultCell = row.createCell(resultCol);
+                }
+                resultCell.setCellValue(message);
+                
+                System.out.println("Result: " + message);
+                
+                // Wait before next iteration
+                Thread.sleep(1000);
+                
+                // Click "Add a Member" button again for next iteration
+                if (i < sheet.getLastRowNum()) {
+                    addMemberButton = driver.findElement(By.linkText("Add a Member"));
+                    addMemberButton.click();
+                }
+            }
+            
+            // Save Excel file
+            outFile = new FileOutputStream(EXCEL_PATH);
+            workbook.write(outFile);
+            System.out.println("Results written to Excel file");
+            
+        } finally {
+            if (workbook != null) workbook.close();
+            if (file != null) file.close();
+            if (outFile != null) outFile.close();
+        }
+        
+        // Click on Home Link
+        WebElement homeLink = driver.findElement(By.linkText("Home"));
+        homeLink.click();
+        
+        System.out.println("=== test10 completed successfully ===");
+    }
+    
+    @Test
+    public void test20(@Optional("ivs_bob") String username, @Optional("illumination") String password) {
+        System.out.println("\n=== Starting test20 ===");
+        
+        // Click on "Already a Member?" button
+        WebElement alreadyMemberButton = driver.findElement(By.linkText("Already a Member?"));
+        alreadyMemberButton.click();
+        
+        // Login with credentials from testng.xml parameters
+        WebElement usernameField = driver.findElement(By.id("username"));
+        usernameField.clear();
+        usernameField.sendKeys(username);
+        
+        WebElement passwordField = driver.findElement(By.id("password"));
+        passwordField.clear();
+        passwordField.sendKeys(password);
+        
+        WebElement loginButton = driver.findElement(By.id("login"));
+        loginButton.click();
+        
+        // Check for successful login by asserting presence of SignOut link
+        try {
+            WebElement signOutLink = driver.findElement(By.linkText("SignOut"));
+            Assert.assertTrue(signOutLink.isDisplayed(), "SignOut link should be visible after login");
+            System.out.println("Login successful - SignOut link found");
+        } catch (NoSuchElementException e) {
+            Assert.fail("Login failed - SignOut link not found");
+        }
+        
+        System.out.println("=== test20 completed successfully ===");
+    }
+    
+    @Test(dataProvider = "courseData")
+    public void test30(String course, String role) {
+        System.out.println("\n=== Starting test30 ===");
+        
+        // Navigate to course addition page (assuming there's a link)
+        WebElement addCourseLink = driver.findElement(By.linkText("Add Course"));
+        addCourseLink.click();
+        
+        // Select Course from dropdown
+        WebElement courseDropdown = driver.findElement(By.id("course"));
+        Select courseSelect = new Select(courseDropdown);
+        courseSelect.selectByVisibleText(course);
+        
+        // Select Role from dropdown
+        WebElement roleDropdown = driver.findElement(By.id("role"));
+        Select roleSelect = new Select(roleDropdown);
+        roleSelect.selectByVisibleText(role);
+        
+        // Click on "Add Details" button
+        WebElement addDetailsButton = driver.findElement(By.id("addDetails"));
+        addDetailsButton.click();
+        
+        System.out.println("Added Course: " + course + " with Role: " + role);
+        System.out.println("=== test30 completed successfully ===");
+    }
+    
+    @DataProvider(name = "courseData")
+    public Object[][] getCourseData() {
+        // 4. Data provider with course and role data
+        return new Object[][] {
+            {"Selenium Using Python", "Educator"},
+            {"Agile Testing", "Co-Educator"}
+        };
+    }
+    
+    @AfterClass
+    public void afterClass() {
+        // 5. Tear down method
+        try {
+            // Click on SignOut link
+            WebElement signOutLink = driver.findElement(By.linkText("SignOut"));
+            signOutLink.click();
+            
+            // Wait a bit before closing
+            Thread.sleep(2000);
+        } catch (Exception e) {
+            System.out.println("Could not find SignOut link: " + e.getMessage());
+        }
+        
+        // Close all tabs and quit browser
+        if (driver != null) {
+            driver.quit();
+        }
+        
+        System.out.println("\n=== All tests completed and browser closed ===");
+    }
+    
+    // Helper method to get cell value from Excel
+    private String getCellValue(Cell cell) {
+        if (cell == null) {
+            return "";
+        }
+        
+        switch (cell.getCellType()) {
+            case STRING:
+                return cell.getStringCellValue();
+            case NUMERIC:
+                if (DateUtil.isCellDateFormatted(cell)) {
+                    return cell.getDateCellValue().toString();
+                } else {
+                    double num = cell.getNumericCellValue();
+                    if (num == Math.floor(num)) {
+                        return String.valueOf((int) num);
+                    } else {
+                        return String.valueOf(num);
+                    }
+                }
+            case BOOLEAN:
+                return String.valueOf(cell.getBooleanCellValue());
+            case FORMULA:
+                return cell.getCellFormula();
+            default:
+                return "";
+        }
+    }
+}
+
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Member Management Test Suite">
+    <test name="Member Management Tests">
+        <parameter name="type" value="ivs_bob"></parameter>
+        <parameter name="pswd" value="illumination"></parameter>
+        
+        <classes>
+            <class name="MemberManagementTest">
+                <methods>
+                    <include name="test10"/>
+                    <include name="test20"/>
+                    <include name="test30"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
+
+
+
+
+
+ <dependencies>
+    <!-- Selenium -->
+    <dependency>
+        <groupId>org.seleniumhq.selenium</groupId>
+        <artifactId>selenium-java</artifactId>
+        <version>4.15.0</version>
+    </dependency>
+    
+    <!-- TestNG -->
+    <dependency>
+        <groupId>org.testng</groupId>
+        <artifactId>testng</artifactId>
+        <version>7.8.0</version>
+        <scope>test</scope>
+    </dependency>
+    
+    <!-- Apache POI for Excel -->
+    <dependency>
+        <groupId>org.apache.poi</groupId>
+        <artifactId>poi</artifactId>
+        <version>5.2.3</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.poi</groupId>
+        <artifactId>poi-ooxml</artifactId>
+        <version>5.2.3</version>
+    </dependency>
+</dependencies>
+
+
+
+
+_...... ... .... .... .... .... ... ... .... ...... ...... ......_...... ... .... .... .... .... ... ... .... ...... ...... ......
+
+
+
+import org.openqa.selenium.*;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
+import org.testng.annotations.*;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import java.io.*;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+public class LibraryManagementTest {
+    
+    private WebDriver driver;
+    private static final String EXCEL_PATH = "/home//Desktop/AdditionalSuppliedFiles/Data.xls";
+    private static final String SCREENSHOT_DIR = "/home//Desktop/AdditionalSuppliedFiles/Screenshots/";
+    
+    @BeforeClass
+    public void beforeClass() {
+        // 1. Setup method
+        System.setProperty("webdriver.gecko.driver", "/home//Desktop/geckodriver");
+        
+        driver = new FirefoxDriver();
+        
+        // Launch the application
+        driver.get("http://m/application/");
+        
+        // Maximize the browser
+        driver.manage().window().maximize();
+        
+        // Implicit wait of 5 seconds
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+    }
+    
+    @Test(priority = 1)
+    public void test10() throws Exception {
+        System.out.println("=== Starting test10 ===");
+        
+        // Click on "REGISTER NOW" button
+        WebElement registerButton = driver.findElement(By.linkText("REGISTER NOW"));
+        registerButton.click();
+        
+        // Process Excel data for registration
+        FileInputStream file = null;
+        Workbook workbook = null;
+        FileOutputStream outFile = null;
+        
+        try {
+            // Open Excel file
+            file = new FileInputStream(new File(EXCEL_PATH));
+            workbook = new XSSFWorkbook(file);
+            Sheet detailsSheet = workbook.getSheet("Details");
+            
+            if (detailsSheet == null) {
+                throw new Exception("'Details' sheet not found in Excel file");
+            }
+            
+            // Find column indices
+            int nameCol = -1, statusCol = -1;
+            Row headerRow = detailsSheet.getRow(0);
+            
+            for (Cell cell : headerRow) {
+                String header = cell.getStringCellValue();
+                if ("Name".equals(header)) {
+                    nameCol = cell.getColumnIndex();
+                }
+                if ("Status".equals(header)) {
+                    statusCol = cell.getColumnIndex();
+                }
+            }
+            
+            // Create Status column if not exists
+            if (statusCol == -1) {
+                statusCol = headerRow.getLastCellNum();
+                Cell statusHeader = headerRow.createCell(statusCol);
+                statusHeader.setCellValue("Status");
+            }
+            
+            // Create screenshots directory
+            File screenshotDir = new File(SCREENSHOT_DIR);
+            if (!screenshotDir.exists()) {
+                screenshotDir.mkdirs();
+            }
+            
+            // Iterate through Excel rows (skip header row)
+            for (int i = 1; i <= detailsSheet.getLastRowNum(); i++) {
+                Row row = detailsSheet.getRow(i);
+                if (row == null) continue;
+                
+                // Get name for screenshot
+                String name = getCellValue(row.getCell(nameCol));
+                
+                // Fill all registration fields (adjust field IDs based on actual HTML)
+                // Assuming fields: firstName, lastName, email, phone, address, username, password
+                fillField("firstName", getCellValue(row.getCell(getColumnIndex(headerRow, "First Name"))));
+                fillField("lastName", getCellValue(row.getCell(getColumnIndex(headerRow, "Last Name"))));
+                fillField("email", getCellValue(row.getCell(getColumnIndex(headerRow, "Email"))));
+                fillField("phone", getCellValue(row.getCell(getColumnIndex(headerRow, "Phone"))));
+                fillField("address", getCellValue(row.getCell(getColumnIndex(headerRow, "Address"))));
+                fillField("username", getCellValue(row.getCell(getColumnIndex(headerRow, "Username"))));
+                fillField("password", getCellValue(row.getCell(getColumnIndex(headerRow, "Password"))));
+                
+                // Click on Register button
+                WebElement registerSubmit = driver.findElement(By.id("register"));
+                registerSubmit.click();
+                
+                // Fetch success/error message
+                String message = "";
+                try {
+                    // Try different selectors for message
+                    WebElement messageElement = driver.findElement(By.xpath("//div[@class='message']"));
+                    message = messageElement.getText();
+                } catch (Exception e) {
+                    try {
+                        WebElement messageElement = driver.findElement(By.xpath("//div[contains(@class,'alert')]"));
+                        message = messageElement.getText();
+                    } catch (Exception e2) {
+                        message = "No message found";
+                    }
+                }
+                
+                // Write message to Status column
+                Cell statusCell = row.getCell(statusCol);
+                if (statusCell == null) {
+                    statusCell = row.createCell(statusCol);
+                }
+                statusCell.setCellValue(message);
+                
+                // Take screenshot
+                takeScreenshot(name + ".png");
+                
+                System.out.println("Processed: " + name + " - Status: " + message);
+                
+                // Click on Reset button
+                WebElement resetButton = driver.findElement(By.id("reset"));
+                resetButton.click();
+                
+                // Wait before next iteration
+                Thread.sleep(1000);
+            }
+            
+            // Save Excel file
+            outFile = new FileOutputStream(EXCEL_PATH);
+            workbook.write(outFile);
+            System.out.println("Registration results written to Excel file");
+            
+        } finally {
+            if (workbook != null) workbook.close();
+            if (file != null) file.close();
+            if (outFile != null) outFile.close();
+        }
+        
+        // Navigate to home page for login
+        driver.get("http:// or /application/");
+        
+        // Click on "SIGN IN" in the home page
+        WebElement signInLink = driver.findElement(By.linkText("SIGN IN"));
+        signInLink.click();
+        
+        // Sign in with credentials
+        WebElement usernameField = driver.findElement(By.id("username"));
+        usernameField.clear();
+        usernameField.sendKeys("librarian");
+        
+        WebElement passwordField = driver.findElement(By.id("password"));
+        passwordField.clear();
+        passwordField.sendKeys("infy123");
+        
+        WebElement loginButton = driver.findElement(By.id("login"));
+        loginButton.click();
+        
+        System.out.println("=== test10 completed successfully ===");
+    }
+    
+    @Test(priority = 2, dataProvider = "bookDetails")
+    public void test20(String bookName, String isbn) {
+        System.out.println("\n=== Starting test20 ===");
+        
+        // Click on "View Books" link
+        WebElement viewBooksLink = driver.findElement(By.linkText("View Books"));
+        viewBooksLink.click();
+        
+        // Select "Fiction" from dropdown
+        WebElement categoryDropdown = driver.findElement(By.id("category"));
+        Select categorySelect = new Select(categoryDropdown);
+        categorySelect.selectByVisibleText("Fiction");
+        
+        // Find books table
+        WebElement booksTable = driver.findElement(By.id("booksTable"));
+        List<WebElement> rows = booksTable.findElements(By.tagName("tr"));
+        
+        boolean bookFound = false;
+        
+        // Iterate through table rows (skip header row)
+        for (int i = 1; i < rows.size(); i++) {
+            WebElement row = rows.get(i);
+            List<WebElement> cells = row.findElements(By.tagName("td"));
+            
+            if (cells.size() >= 3) {
+                String tableBookName = cells.get(0).getText();
+                String tableISBN = cells.get(1).getText();
+                String authorName = cells.get(2).getText();
+                
+                // Check if both book name and ISBN match
+                if (tableBookName.equals(bookName) && tableISBN.equals(isbn)) {
+                    System.out.println("Book found! Author: " + authorName);
+                    bookFound = true;
+                    break;
+                }
+            }
+        }
+        
+        if (!bookFound) {
+            System.out.println("Book '" + bookName + "' with ISBN '" + isbn + "' is not available");
+        }
+        
+        // Refresh the page after all iterations
+        driver.navigate().refresh();
+        
+        System.out.println("=== test20 completed for book: " + bookName + " ===");
+    }
+    
+    @Test(priority = 3)
+    public void test30() {
+        System.out.println("\n=== Starting test30 ===");
+        
+        // Click on "Add a Book" link
+        WebElement addBookLink = driver.findElement(By.linkText("Add a Book"));
+        addBookLink.click();
+        
+        // Select "Non Fiction" from Type of Book dropdown
+        WebElement bookTypeDropdown = driver.findElement(By.id("bookType"));
+        Select bookTypeSelect = new Select(bookTypeDropdown);
+        bookTypeSelect.selectByVisibleText("Non Fiction");
+        
+        // Fill Book Title
+        WebElement bookTitleField = driver.findElement(By.id("bookTitle"));
+        bookTitleField.clear();
+        bookTitleField.sendKeys("What Happened");
+        
+        // Fill ISBN Number
+        WebElement isbnField = driver.findElement(By.id("isbn"));
+        isbnField.clear();
+        isbnField.sendKeys("122228-99");
+        
+        // Fill Author Name
+        WebElement authorField = driver.findElement(By.id("author"));
+        authorField.clear();
+        authorField.sendKeys("Hillary");
+        
+        // Click submit button (assuming there's a submit button)
+        WebElement submitButton = driver.findElement(By.id("submit"));
+        submitButton.click();
+        
+        // Handle alert
+        try {
+            Alert alert = driver.switchTo().alert();
+            String alertText = alert.getText();
+            System.out.println("Alert text: " + alertText);
+            
+            // Assert the fetched text with "Book successfully added"
+            try {
+                Assert.assertEquals(alertText, "Book successfully added", 
+                                  "Alert message doesn't match expected text");
+                System.out.println("Assertion passed: Alert message matches expected text");
+            } catch (AssertionError e) {
+                System.out.println("Assertion failed: " + e.getMessage());
+                // Continue execution as per requirement
+            }
+            
+            // Accept the alert
+            alert.accept();
+            
+        } catch (NoAlertPresentException e) {
+            System.out.println("No alert present after adding book");
+        }
+        
+        System.out.println("=== test30 completed successfully ===");
+    }
+    
+    @DataProvider(name = "bookDetails")
+    public Object[][] getBookDetails() {
+        // 3. Data provider with book details
+        return new Object[][] {
+            {"Lord of the Rings", "000747766"},
+            {"The Alchemist", "1112234988"}
+        };
+    }
+    
+    @AfterClass
+    public void afterClass() {
+        // 5. Tear down method
+        if (driver != null) {
+            driver.quit();
+        }
+        System.out.println("\n=== All tests completed and browser closed ===");
+    }
+    
+    // Helper methods
+    private void fillField(String fieldId, String value) {
+        try {
+            WebElement field = driver.findElement(By.id(fieldId));
+            field.clear();
+            field.sendKeys(value);
+        } catch (Exception e) {
+            System.out.println("Could not fill field " + fieldId + ": " + e.getMessage());
+        }
+    }
+    
+    private int getColumnIndex(Row headerRow, String columnName) {
+        for (Cell cell : headerRow) {
+            if (columnName.equals(cell.getStringCellValue())) {
+                return cell.getColumnIndex();
+            }
+        }
+        return -1;
+    }
+    
+    private String getCellValue(Cell cell) {
+        if (cell == null) {
+            return "";
+        }
+        
+        switch (cell.getCellType()) {
+            case STRING:
+                return cell.getStringCellValue();
+            case NUMERIC:
+                if (DateUtil.isCellDateFormatted(cell)) {
+                    return cell.getDateCellValue().toString();
+                } else {
+                    double num = cell.getNumericCellValue();
+                    if (num == Math.floor(num)) {
+                        return String.valueOf((int) num);
+                    } else {
+                        return String.valueOf(num);
+                    }
+                }
+            case BOOLEAN:
+                return String.valueOf(cell.getBooleanCellValue());
+            case FORMULA:
+                return cell.getCellFormula();
+            default:
+                return "";
+        }
+    }
+    
+    private void takeScreenshot(String fileName) {
+        try {
+            File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+            String savePath = SCREENSHOT_DIR + fileName;
+            
+            File destFile = new File(savePath);
+            org.apache.commons.io.FileUtils.copyFile(screenshot, destFile);
+            System.out.println("Screenshot saved: " + savePath);
+            
+        } catch (IOException e) {
+            System.out.println("Failed to take screenshot: " + e.getMessage());
+        }
+    }
+}
+
+_...... ... .... .... .... .... ... ... .... ...... ...... ......_...... ... .... .... .... .... ... ... .... ...... ...... ......
+
+
+
+import org.openqa.selenium.*;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.Select;
+import org.testng.annotations.*;
+import org.testng.asserts.SoftAssert;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import java.io.*;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+public class SubmitTest {
+    
+    private WebDriver driver;
+    private static final String EXCEL_PATH = "/home//Desktop/AdditionalSuppliedFiles/Data.xls";
+    private static final String SCREENSHOT_DIR = "/home//Desktop/AdditionalSuppliedFiles/Screenshots/";
+    private SoftAssert softAssert;
+    
+    @BeforeClass
+    public void beforeClass() {
+        // 1. Setup method
+        System.setProperty("webdriver.gecko.driver", "/home//Desktop/geckodriver");
+        
+        driver = new FirefoxDriver();
+        
+        // Launch the application
+        driver.get("http://localhost:8080/application/");
+        
+        // Maximize the browser
+        driver.manage().window().maximize();
+        
+        // Implicit wait of 10 seconds
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        
+        // Initialize SoftAssert
+        softAssert = new SoftAssert();
+    }
+    
+    @Test(priority = 1)
+    public void test10() {
+        System.out.println("=== Starting test10 ===");
+        
+        // Print title of the page
+        String pageTitle = driver.getTitle();
+        System.out.println("Title of current page is: " + pageTitle);
+        
+        // Take screenshot
+        takeScreenshot("Image.PNG");
+        
+        System.out.println("=== test10 completed successfully ===");
+    }
+    
+    @Test(priority = 2)
+    public void test20() throws Exception {
+        System.out.println("\n=== Starting test20 ===");
+        
+        // Browse Catalog and check for free Courses Online
+        WebElement browseCatalogLink = driver.findElement(By.linkText("Browse Catalog"));
+        browseCatalogLink.click();
+        
+        // Check for free courses
+        WebElement freeCoursesFilter = driver.findElement(By.id("free"));
+        freeCoursesFilter.click();
+        
+        // Enroll for Intro to Programming in Python
+        WebElement pythonCourse = driver.findElement(By.xpath("//*[contains(text(), 'Intro to Programming in Python')]"));
+        pythonCourse.click();
+        
+        // Click enroll button
+        WebElement enrollButton = driver.findElement(By.id("enroll"));
+        enrollButton.click();
+        
+        // Process Excel data for student enrollment
+        FileInputStream file = null;
+        Workbook workbook = null;
+        
+        try {
+            // Open Excel file
+            file = new FileInputStream(new File(EXCEL_PATH));
+            workbook = new XSSFWorkbook(file);
+            Sheet sheet = workbook.getSheetAt(0); // Assuming first sheet
+            
+            // Find column indices
+            int nameCol = -1, emailCol = -1, collegeCol = -1, yearCol = -1;
+            Row headerRow = sheet.getRow(0);
+            
+            for (Cell cell : headerRow) {
+                String header = cell.getStringCellValue();
+                switch (header) {
+                    case "Name": nameCol = cell.getColumnIndex(); break;
+                    case "Email": emailCol = cell.getColumnIndex(); break;
+                    case "College": collegeCol = cell.getColumnIndex(); break;
+                    case "Year of Passing": yearCol = cell.getColumnIndex(); break;
+                }
+            }
+            
+            // Counter for enrolling 3 students
+            int enrolledCount = 0;
+            
+            // Iterate through Excel rows (skip header row)
+            for (int i = 1; i <= sheet.getLastRowNum() && enrolledCount < 3; i++) {
+                Row row = sheet.getRow(i);
+                if (row == null) continue;
+                
+                // Get data from Excel
+                String name = getCellValue(row.getCell(nameCol));
+                String email = getCellValue(row.getCell(emailCol));
+                String college = getCellValue(row.getCell(collegeCol));
+                String year = getCellValue(row.getCell(yearCol));
+                
+                // Check if college is RTU and year is 2013
+                if ("RTU".equals(college) && "2013".equals(year)) {
+                    System.out.println("Enrolling student: " + name);
+                    
+                    // Fill student details
+                    WebElement nameField = driver.findElement(By.id("studentName"));
+                    nameField.clear();
+                    nameField.sendKeys(name);
+                    
+                    WebElement emailField = driver.findElement(By.id("studentEmail"));
+                    emailField.clear();
+                    emailField.sendKeys(email);
+                    
+                    WebElement collegeField = driver.findElement(By.id("college"));
+                    collegeField.clear();
+                    collegeField.sendKeys(college);
+                    
+                    WebElement yearField = driver.findElement(By.id("year"));
+                    yearField.clear();
+                    yearField.sendKeys(year);
+                    
+                    // Register for the Course
+                    WebElement registerButton = driver.findElement(By.id("register"));
+                    registerButton.click();
+                    
+                    // Print Registration message
+                    try {
+                        WebElement messageElement = driver.findElement(By.id("message"));
+                        String registrationMessage = messageElement.getText();
+                        System.out.println("Registration message: " + registrationMessage);
+                    } catch (Exception e) {
+                        System.out.println("No registration message found");
+                    }
+                    
+                    enrolledCount++;
+                    
+                    // If we need to enroll more students, go back to enrollment page
+                    if (enrolledCount < 3) {
+                        driver.navigate().back();
+                        enrollButton = driver.findElement(By.id("enroll"));
+                        enrollButton.click();
+                    }
+                }
+            }
+            
+            System.out.println("Enrolled " + enrolledCount + " students from RTU with passing year 2013");
+            
+        } finally {
+            if (workbook != null) workbook.close();
+            if (file != null) file.close();
+        }
+        
+        System.out.println("=== test20 completed successfully ===");
+    }
+    
+    @Test(priority = 3)
+    public void test30() {
+        System.out.println("\n=== Starting test30 ===");
+        
+        // Browse the Offers link
+        WebElement offersLink = driver.findElement(By.linkText("Offers"));
+        offersLink.click();
+        
+        // Fetch the details of offer table and print the data in console
+        WebElement offersTable = driver.findElement(By.id("offersTable"));
+        List<WebElement> rows = offersTable.findElements(By.tagName("tr"));
+        
+        System.out.println("=== Offers Table Data ===");
+        for (WebElement row : rows) {
+            List<WebElement> cells = row.findElements(By.tagName("td"));
+            for (WebElement cell : cells) {
+                System.out.print(cell.getText() + "\t");
+            }
+            System.out.println();
+        }
+        
+        // Use Soft Assertion and assert the title of the page
+        String currentTitle = driver.getTitle();
+        System.out.println("Current page title: " + currentTitle);
+        
+        // Soft assertion - adjust expected title based on your application
+        softAssert.assertEquals(currentTitle, "Offers | Course Portal", 
+                              "Page title doesn't match expected");
+        
+        // Add more soft assertions if needed
+        softAssert.assertTrue(currentTitle.contains("Offers"), 
+                            "Page title should contain 'Offers'");
+        
+        // Report all soft assertion failures at the end
+        softAssert.assertAll();
+        
+        System.out.println("=== test30 completed successfully ===");
+    }
+    
+    @AfterClass
+    public void afterClass() {
+        // 5. Tear Down method
+        if (driver != null) {
+            driver.quit();
+        }
+        System.out.println("\n=== All tests completed and browser closed ===");
+    }
+    
+    // Helper methods
+    private void takeScreenshot(String fileName) {
+        try {
+            // Create directory if it doesn't exist
+            File screenshotDir = new File(SCREENSHOT_DIR);
+            if (!screenshotDir.exists()) {
+                screenshotDir.mkdirs();
+            }
+            
+            File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+            String savePath = SCREENSHOT_DIR + fileName;
+            
+            File destFile = new File(savePath);
+            org.apache.commons.io.FileUtils.copyFile(screenshot, destFile);
+            System.out.println("Screenshot saved: " + savePath);
+            
+        } catch (IOException e) {
+            System.out.println("Failed to take screenshot: " + e.getMessage());
+        }
+    }
+    
+    private String getCellValue(Cell cell) {
+        if (cell == null) {
+            return "";
+        }
+        
+        switch (cell.getCellType()) {
+            case STRING:
+                return cell.getStringCellValue();
+            case NUMERIC:
+                if (DateUtil.isCellDateFormatted(cell)) {
+                    return cell.getDateCellValue().toString();
+                } else {
                     double num = cell.getNumericCellValue();
                     if (num == Math.floor(num)) {
                         return String.valueOf((int) num);
