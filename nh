@@ -621,3 +621,360 @@ public class EventsTest {
     }
 }
 
+------------
+
+
+
+
+
+import org.openqa.selenium.*;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.Select;
+import org.testng.annotations.*;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import java.io.*;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+public class CourseManagementTest {
+    
+    private WebDriver driver;
+    private static final String EXCEL_PATH = "/home/ppliedFiles/Data.xls";
+    private static final String SCREENSHOT_DIR = "/home/pliedFiles/Screenshots/";
+    
+    @BeforeClass
+    public void beforeClass() {
+        // Setup method
+        System.setProperty("webdriver.gecko.driver", "/home/top/geckodriver");
+        
+        driver = new FirefoxDriver();
+        
+        // Launch the application
+        driver.get("http://ion/index.html");
+        
+        // Maximize the browser
+        driver.manage().window().maximize();
+        
+        // Implicit wait of 8 seconds
+        driver.manage().timeouts().implicitlyWait(8, TimeUnit.SECONDS);
+    }
+    
+    @Test(priority = 1)
+    public void test10() {
+        System.out.println("=== Starting test10 ===");
+        
+        // Click on View button of "Intro to Programming in Python"
+        WebElement viewButton = driver.findElement(By.xpath("//*[contains(text(), 'Intro to Programming in Python')]/following::button[contains(text(), 'View')]"));
+        viewButton.click();
+        
+        // Take screenshot of the window
+        takeScreenshot("Image.PNG");
+        
+        // Click on Close button
+        WebElement closeButton = driver.findElement(By.id("close"));
+        closeButton.click();
+        
+        System.out.println("=== test10 completed successfully ===");
+    }
+    
+    @Test(priority = 2)
+    public void test20() {
+        System.out.println("\n=== Starting test20 ===");
+        
+        // Click on "BROWSE CATALOG." using linkText
+        WebElement browseCatalogLink = driver.findElement(By.linkText("BROWSE CATALOG."));
+        browseCatalogLink.click();
+        
+        // Click on "Paid" filter radio button
+        WebElement paidRadioButton = driver.findElement(By.id("paid"));
+        paidRadioButton.click();
+        
+        // Click on Enroll button for "An Intro to Mongo DB"
+        WebElement enrollButton = driver.findElement(By.xpath("//*[contains(text(), 'An Intro to Mongo DB')]/following::button[contains(text(), 'Enroll')]"));
+        enrollButton.click();
+        
+        // Populate the required fields with test data
+        WebElement nameField = driver.findElement(By.id("name"));
+        nameField.clear();
+        nameField.sendKeys("Jack");
+        
+        WebElement emailField = driver.findElement(By.id("email"));
+        emailField.clear();
+        emailField.sendKeys("jack@iqe.com");
+        
+        WebElement personField = driver.findElement(By.id("person"));
+        personField.clear();
+        personField.sendKeys("Employee");
+        
+        WebElement companyField = driver.findElement(By.id("company"));
+        companyField.clear();
+        companyField.sendKeys("Infosys");
+        
+        WebElement roleField = driver.findElement(By.id("role"));
+        roleField.clear();
+        roleField.sendKeys("System Engineer");
+        
+        WebElement discountField = driver.findElement(By.id("discount"));
+        discountField.clear();
+        discountField.sendKeys("$1010");
+        
+        // Click on Pay & Register
+        WebElement payRegisterButton = driver.findElement(By.id("payRegister"));
+        payRegisterButton.click();
+        
+        // On Payment Window, populate card details from Excel
+        processCardDetailsFromExcel();
+        
+        System.out.println("=== test20 completed successfully ===");
+    }
+    
+    @Test(priority = 3)
+    public void test30() {
+        System.out.println("\n=== Starting test30 ===");
+        
+        // Click on "OFFERS"
+        WebElement offersLink = driver.findElement(By.linkText("OFFERS"));
+        offersLink.click();
+        
+        // Print all "Offer Name" whose Offer Description has "20 INR off"
+        WebElement offersTable = driver.findElement(By.id("offersTable"));
+        List<WebElement> rows = offersTable.findElements(By.tagName("tr"));
+        
+        System.out.println("=== Offers with '20 INR off' ===");
+        for (WebElement row : rows) {
+            List<WebElement> cells = row.findElements(By.tagName("td"));
+            if (cells.size() >= 2) {
+                String offerName = cells.get(0).getText();
+                String offerDesc = cells.get(1).getText();
+                
+                if (offerDesc.contains("20 INR off")) {
+                    System.out.println("Offer Name: " + offerName);
+                    System.out.println("  Description: " + offerDesc);
+                }
+            }
+        }
+        
+        System.out.println("=== test30 completed successfully ===");
+    }
+    
+    @Test(priority = 4)
+    public void test2() {
+        System.out.println("\n=== Starting test2 ===");
+        
+        // This test seems to be a duplicate/variant of test20
+        // Navigate to catalog again
+        WebElement browseCatalogLink = driver.findElement(By.linkText("BROWSE CATALOG."));
+        browseCatalogLink.click();
+        
+        WebElement paidRadioButton = driver.findElement(By.id("paid"));
+        paidRadioButton.click();
+        
+        WebElement enrollButton = driver.findElement(By.xpath("//*[contains(text(), 'An Intro to Mongo DB')]/following::button[contains(text(), 'Enroll')]"));
+        enrollButton.click();
+        
+        // Populate with jayaprakashreddy data
+        WebElement nameField = driver.findElement(By.id("name"));
+        nameField.clear();
+        nameField.sendKeys("jayaprakashreddy");
+        
+        WebElement emailField = driver.findElement(By.id("email"));
+        emailField.clear();
+        emailField.sendKeys("jayaprakashreddy@gmail.com");
+        
+        WebElement personField = driver.findElement(By.id("person"));
+        personField.clear();
+        personField.sendKeys("jayaprakashreddy");
+        
+        WebElement companyField = driver.findElement(By.id("company"));
+        companyField.clear();
+        companyField.sendKeys("System");
+        
+        // Click on Pay & Register
+        WebElement payRegisterButton = driver.findElement(By.id("payRegister"));
+        payRegisterButton.click();
+        
+        // Process card details and write success message
+        processCardDetailsAndWriteMessage();
+        
+        System.out.println("=== test2 completed successfully ===");
+    }
+    
+    private void processCardDetailsFromExcel() {
+        FileInputStream file = null;
+        Workbook workbook = null;
+        
+        try {
+            file = new FileInputStream(new File(EXCEL_PATH));
+            workbook = new XSSFWorkbook(file);
+            Sheet sheet = workbook.getSheetAt(0);
+            
+            // Find card details column
+            Row headerRow = sheet.getRow(0);
+            int cardDetailsCol = -1;
+            
+            for (Cell cell : headerRow) {
+                if ("Card Details".equals(cell.getStringCellValue())) {
+                    cardDetailsCol = cell.getColumnIndex();
+                    break;
+                }
+            }
+            
+            if (cardDetailsCol != -1 && sheet.getLastRowNum() >= 1) {
+                Row dataRow = sheet.getRow(1);
+                String cardDetails = getCellValue(dataRow.getCell(cardDetailsCol));
+                
+                // Populate card details field
+                WebElement cardField = driver.findElement(By.id("cardNumber"));
+                cardField.clear();
+                cardField.sendKeys(cardDetails);
+                
+                WebElement expiryField = driver.findElement(By.id("expiry"));
+                expiryField.sendKeys("12/25");
+                
+                WebElement cvvField = driver.findElement(By.id("cvv"));
+                cvvField.sendKeys("123");
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (workbook != null) workbook.close();
+                if (file != null) file.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    private void processCardDetailsAndWriteMessage() {
+        FileInputStream file = null;
+        FileOutputStream outFile = null;
+        Workbook workbook = null;
+        
+        try {
+            file = new FileInputStream(new File(EXCEL_PATH));
+            workbook = new XSSFWorkbook(file);
+            Sheet sheet = workbook.getSheetAt(0);
+            
+            // Find or create Message column
+            Row headerRow = sheet.getRow(0);
+            int messageCol = -1;
+            
+            for (Cell cell : headerRow) {
+                if ("Message".equals(cell.getStringCellValue())) {
+                    messageCol = cell.getColumnIndex();
+                    break;
+                }
+            }
+            
+            if (messageCol == -1) {
+                messageCol = headerRow.getLastCellNum();
+                Cell messageHeader = headerRow.createCell(messageCol);
+                messageHeader.setCellValue("Message");
+            }
+            
+            // Populate card details
+            WebElement cardField = driver.findElement(By.id("cardNumber"));
+            cardField.clear();
+            cardField.sendKeys("4111111111111111");
+            
+            WebElement expiryField = driver.findElement(By.id("expiry"));
+            expiryField.clear();
+            expiryField.sendKeys("12/25");
+            
+            WebElement cvvField = driver.findElement(By.id("cvv"));
+            cvvField.clear();
+            cvvField.sendKeys("123");
+            
+            // Click on Make Payment
+            WebElement makePaymentButton = driver.findElement(By.id("makePayment"));
+            makePaymentButton.click();
+            
+            // Get success message
+            String successMessage = "";
+            try {
+                WebElement messageElement = driver.findElement(By.xpath("//div[contains(@class,'success')]"));
+                successMessage = messageElement.getText();
+            } catch (Exception e) {
+                successMessage = "Payment Successful";
+            }
+            
+            // Write message to Excel
+            if (sheet.getLastRowNum() >= 1) {
+                Row dataRow = sheet.getRow(1);
+                Cell messageCell = dataRow.getCell(messageCol);
+                if (messageCell == null) {
+                    messageCell = dataRow.createCell(messageCol);
+                }
+                messageCell.setCellValue(successMessage);
+            }
+            
+            // Save Excel file
+            outFile = new FileOutputStream(EXCEL_PATH);
+            workbook.write(outFile);
+            
+            System.out.println("Success message written to Excel: " + successMessage);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (workbook != null) workbook.close();
+                if (file != null) file.close();
+                if (outFile != null) outFile.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    @AfterClass
+    public void afterClass() {
+        // Quit the driver
+        if (driver != null) {
+            driver.quit();
+        }
+        System.out.println("\n=== All tests completed and browser closed ===");
+    }
+    
+    // Helper methods
+    private void takeScreenshot(String fileName) {
+        try {
+            File screenshotDir = new File(SCREENSHOT_DIR);
+            if (!screenshotDir.exists()) {
+                screenshotDir.mkdirs();
+            }
+            
+            File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+            String savePath = SCREENSHOT_DIR + fileName;
+            
+            org.apache.commons.io.FileUtils.copyFile(screenshot, new File(savePath));
+            System.out.println("Screenshot saved: " + savePath);
+            
+        } catch (IOException e) {
+            System.out.println("Failed to take screenshot: " + e.getMessage());
+        }
+    }
+    
+    private String getCellValue(Cell cell) {
+        if (cell == null) return "";
+        
+        switch (cell.getCellType()) {
+            case STRING:
+                return cell.getStringCellValue();
+            case NUMERIC:
+                double num = cell.getNumericCellValue();
+                if (num == Math.floor(num)) {
+                    return String.valueOf((int) num);
+                } else {
+                    return String.valueOf(num);
+                }
+            case BOOLEAN:
+                return String.valueOf(cell.getBooleanCellValue());
+            default:
+                return "";
+        }
+    }
+}
