@@ -40,6 +40,9 @@ public class TestAutomation {
     
     @Test
     public void test10() {
+list of option print, assert, alert
+
+
         System.out.println("=== Starting test10 ===");
         
         // Click on the Offers link
@@ -69,8 +72,7 @@ public class TestAutomation {
         String alertText = alert.getText();
         System.out.println("Alert text: " + alertText);
         
-        Assert.assertEquals(alertText, "Now get Rs 100 off on your ICICI Bank Credit Card", 
-                          "Alert message doesn't match!");
+        Assert.assertEquals(alertText, "Now get Rs 100 off on your ICICI Bank Credit Card", "Alert message doesn't match!");
         
         // Accept the alert
         alert.accept();
@@ -80,6 +82,10 @@ public class TestAutomation {
     
     @Test
     public void test20() {
+table print, screenshot,
+
+
+
         System.out.println("\n=== Starting test20 ===");
         
         // Click on the Home link
@@ -114,10 +120,10 @@ public class TestAutomation {
         // Take screenshot
         try {
             File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-            String screenshotPath = "/home/pg_user/Desktop/AdditionalSuppliedFiles/Screenshots/Image.png";
+            String screenshotPath = "/home/edFiles/Screenshots/Image.png";
             
             // Create directory if it doesn't exist
-            File directory = new File("/home/pg_user/Desktop/AdditionalSuppliedFiles/Screenshots");
+            File directory = new File("/home//alSuppliedFiles/Screenshots");
             if (!directory.exists()) {
                 directory.mkdirs();
             }
@@ -136,6 +142,8 @@ public class TestAutomation {
     
     @Test
     public void test30() {
+print title, window handling, excel 
+
         System.out.println("\n=== Starting test30 ===");
         
         // Click on Events Link
